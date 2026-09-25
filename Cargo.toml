@@ -1,0 +1,15 @@
+[package]
+name = "reqk"
+version = "0.1.0"
+edition = "2024"
+
+[profile.release]
+lto = true
+strip = true
+codegen-units = 1
+
+[dependencies]
+slint = { version = "1.18.1", default-features = false, features = ["compat-1-2", "backend-winit", "renderer-femtovg-wgpu"] }
+
+[build-dependencies]
+slint-build = "1.18.1"
