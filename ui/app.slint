@@ -1,7 +1,18 @@
+import { Button } from "std-widgets.slint";
 export component AppWindow inherits Window {
+    in property <string> name;
+
+    callback req();
+
     VerticalLayout {
         Text {
-            text: "oi";
+            text: name;
+        }
+
+        Button {
+            clicked => {
+                root.req();
+            }
         }
     }
 }
