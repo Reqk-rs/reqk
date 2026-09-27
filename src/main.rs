@@ -17,7 +17,9 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let app_weak = app.as_weak();
     tokio::spawn(async move {
         while let Some(event) = rx.recv().await {
-            let _ = event.exec(app_weak.clone()).await;
+            if let Err(error) = event.exec(app_weak.clone()).await {
+                eprintln!("Event execution failed: {}", error)
+            }
         }
     });
 
