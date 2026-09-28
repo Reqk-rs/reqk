@@ -12,6 +12,8 @@ slint::include_modules!();
 #[tokio::main(worker_threads = 1)]
 async fn main() -> Result<(), Box<dyn Error>> {
     let app = AppWindow::new()?;
+    app.window().set_maximized(true);
+
     let (tx, mut rx) = mpsc::unbounded_channel::<Events>();
 
     let app_weak = app.as_weak();
