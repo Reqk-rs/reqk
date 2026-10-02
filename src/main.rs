@@ -25,9 +25,13 @@ async fn main() -> Result<(), Box<dyn Error>> {
         }
     });
 
-    let tx_req = tx.clone();
-    app.on_req(move || {
-        let _ = tx_req.send(Events::Req);
+    let tx_request = tx.clone();
+    let app_weak = app.as_weak();
+    app.on_fn_request(move || {
+        if let Some(app) = app_weak.upgrade() {
+            let request = app.get_request();
+            let _ = tx_request.send(Events::Request(request));
+        }
     });
 
     app.run()?;
