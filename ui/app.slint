@@ -1,18 +1,57 @@
-import { Button } from "std-widgets.slint";
-export component AppWindow inherits Window {
-    in property <string> name;
+import { Button, ComboBox } from "std-widgets.slint";
 
-    callback req();
+enum MethodHttp {
+    GET,
+    POST
+}
+
+struct Request {
+    url: string,
+    method: MethodHttp
+}
+
+struct Response {
+    body: string
+}
+
+export component AppWindow inherits Window {
+    out property <Request> request: { url: "", method: MethodHttp.GET };
+    in property <Response> response;
+
+    callback fn_request();
 
     VerticalLayout {
-        Text {
-            text: name;
+        alignment: start;
+
+        ComboBox {
+            model: ["GET", "POST"];
+            current-index: 0;
+
+            selected(value) => {
+                if (self.current-value == "GET") {
+                    root.request.method = MethodHttp.GET
+                } else {
+                    root.request.method = MethodHttp.POST
+                }
+            }
+        }
+
+        TextInput {
+            text: request.url;
+            edited => {
+                root.request.url = self.text;
+            }
         }
 
         Button {
+            text: "Send";
             clicked => {
-                root.req();
+                root.fn_request();
             }
+        }
+
+        Text {
+            text: response.body;
         }
     }
 }
